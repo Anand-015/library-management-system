@@ -1,9 +1,19 @@
-const Book = require('../models/book');
+const { getDb } = require('../config/db');
+const { ObjectId } = require('mongodb');
 
 exports.addBook = async (req, res) => {
   try {
-    const book = await Book.create(req.body);
-    res.status(201).json(book);
+    const db = getDb();
+    const { title, author, genre, ISBN, quantity } = req.body;
+    const result = await db.collection('books').insertOne({
+      title, author, genre, ISBN,
+      quantity: parseInt(quantity),
+      available: parseInt(quantity),
+      borrowCount: 0,
+      reservedBy: [],
+      createdAt: new Date()
+    });
+    res.status(201).json({ _id: result.insertedId, title, author, genre, ISBN, quantity });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -11,16 +21,16 @@ exports.addBook = async (req, res) => {
 
 exports.getBooks = async (req, res) => {
   try {
-    const { search, genre, available } = req.query;
+    const db = getDb();
+    const { search, genre } = req.query;
     let query = {};
     if (search) query.$or = [
       { title: { $regex: search, $options: 'i' } },
       { author: { $regex: search, $options: 'i' } },
       { ISBN: { $regex: search, $options: 'i' } }
     ];
-    if (genre) query.genre = genre;
-    if (available === 'true') query.available = { $gt: 0 };
-    const books = await Book.find(query);
+    if (genre) query.genre = { $regex: genre, $options: 'i' };
+    const books = await db.collection('books').find(query).toArray();
     res.json(books);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -29,7 +39,8 @@ exports.getBooks = async (req, res) => {
 
 exports.getBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const db = getDb();
+    const book = await db.collection('books').findOne({ _id: new ObjectId(req.params.id) });
     if (!book) return res.status(404).json({ message: 'Book not found' });
     res.json(book);
   } catch (err) {
@@ -39,7 +50,12 @@ exports.getBook = async (req, res) => {
 
 exports.updateBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const db = getDb();
+    await db.collection('books').updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: req.body }
+    );
+    const book = await db.collection('books').findOne({ _id: new ObjectId(req.params.id) });
     res.json(book);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -48,7 +64,8 @@ exports.updateBook = async (req, res) => {
 
 exports.deleteBook = async (req, res) => {
   try {
-    await Book.findByIdAndDelete(req.params.id);
+    const db = getDb();
+    await db.collection('books').deleteOne({ _id: new ObjectId(req.params.id) });
     res.json({ message: 'Book deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -57,12 +74,15 @@ exports.deleteBook = async (req, res) => {
 
 exports.reserveBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const db = getDb();
+    const book = await db.collection('books').findOne({ _id: new ObjectId(req.params.id) });
     if (!book) return res.status(404).json({ message: 'Book not found' });
     if (book.reservedBy.includes(req.user.id))
       return res.status(400).json({ message: 'Already reserved' });
-    book.reservedBy.push(req.user.id);
-    await book.save();
+    await db.collection('books').updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $push: { reservedBy: req.user.id } }
+    );
     res.json({ message: 'Book reserved successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
