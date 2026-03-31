@@ -9,5 +9,6 @@ router.get('/:id', protect, bookController.getBook);
 router.put('/:id', protect, adminOnly, bookController.updateBook);
 router.delete('/:id', protect, adminOnly, bookController.deleteBook);
 router.post('/:id/reserve', protect, bookController.reserveBook);
+router.post('/:id/request', protect, bookController.requestBook);
 
 module.exports = router;

@@ -9,6 +9,7 @@ import Members from './pages/Members';
 import Borrows from './pages/Borrows';
 import Fines from './pages/Fines';
 import Profile from './pages/Profile';
+import Inbox from './pages/Inbox';
 import Navbar from './components/Navbar';
 
 const ProtectedRoute = ({ children, adminOnly }) => {
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/borrows" element={<ProtectedRoute adminOnly><Navbar /><Borrows /></ProtectedRoute>} />
           <Route path="/fines" element={<ProtectedRoute><Navbar /><Fines /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Navbar /><Profile /></ProtectedRoute>} />
+          <Route path="/inbox" element={<ProtectedRoute><Navbar /><Inbox /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

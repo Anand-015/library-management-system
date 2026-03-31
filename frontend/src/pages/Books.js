@@ -39,6 +39,14 @@ export default function Books() {
     catch (err) { alert(err.response?.data?.message); }
   };
 
+  const handleRequest = async (id) => {
+    try {
+      await api.post(`/books/${id}/request`);
+      alert('Book requested successfully! Check your Inbox.');
+      fetchBooks();
+    } catch (err) { alert(err.response?.data?.message || 'Error requesting book'); }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -77,6 +85,8 @@ export default function Books() {
             <div style={styles.cardActions}>
               {book.available === 0 && user?.role === 'member' &&
                 <button style={styles.btnSmall} onClick={() => handleReserve(book._id)}>Reserve</button>}
+              {book.available > 0 && user?.role === 'member' &&
+                <button style={styles.btnSmall} onClick={() => handleRequest(book._id)}>Request Book</button>}
               {user?.role === 'admin' &&
                 <button style={{...styles.btnSmall, background:'#e53935'}} onClick={() => handleDelete(book._id)}>Delete</button>}
             </div>

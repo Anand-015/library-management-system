@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "69cabf09f2731977fe6c91b6",
+    "user": "69cabdf0f2731977fe6c91b2",
+    "book": "69cabcbdf2731977fe6c91aa",
+    "issueDate": "2026-03-30T18:20:57.706Z",
+    "dueDate": "2026-04-13T18:20:57.706Z",
+    "returnDate": "2026-03-30T18:21:33.788Z",
+    "status": "returned"
+  },
+  {
+    "_id": "69cabf1bf2731977fe6c91b7",
+    "user": "69cabee0f2731977fe6c91b5",
+    "book": "69cabd35f2731977fe6c91ae",
+    "issueDate": "2026-03-13T18:21:15.412Z",
+    "dueDate": "2026-03-30T18:21:15.412Z",
+    "returnDate": null,
+    "status": "borrowed"
+  },
+  {
+    "_id": "69cabf5bf2731977fe6c91b8",
+    "user": "69cabe7df2731977fe6c91b3",
+    "book": "69cabd35f2731977fe6c91ae",
+    "issueDate": "2026-03-30T18:22:19.241Z",
+    "dueDate": "2026-04-13T18:22:19.241Z",
+    "returnDate": null,
+    "status": "borrowed"
+  },
+  {
+    "_id": "69cabf5ef2731977fe6c91b9",
+    "user": "69cabecaf2731977fe6c91b4",
+    "book": "69cabd35f2731977fe6c91ae",
+    "issueDate": "2026-03-30T18:22:22.470Z",
+    "dueDate": "2026-04-13T18:22:22.470Z",
+    "returnDate": "2026-03-31T07:02:28.845Z",
+    "status": "returned"
+  },
+  {
+    "_id": "69cabff8f2731977fe6c91ba",
+    "user": "69cabdf0f2731977fe6c91b2",
+    "book": "69cabcf6f2731977fe6c91ac",
+    "issueDate": "2026-03-30T18:24:56.337Z",
+    "dueDate": "2026-04-13T18:24:56.337Z",
+    "returnDate": "2026-03-31T07:02:17.186Z",
+    "status": "returned"
+  },
+  {
+    "_id": "69cb6e4c941792331d8d4591",
+    "user": "69cabee0f2731977fe6c91b5",
+    "book": "69cabd0df2731977fe6c91ad",
+    "issueDate": "2026-03-31T06:48:44.112Z",
+    "dueDate": "2026-04-14T06:48:44.112Z",
+    "returnDate": null,
+    "status": "borrowed"
+  }
+]

@@ -88,3 +88,37 @@ exports.reserveBook = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.requestBook = async (req, res) => {
+  try {
+    const db = getDb();
+    const bookId = req.params.id;
+    const userId = req.user.id;
+
+    const book = await db.collection('books').findOne({ _id: new ObjectId(bookId) });
+    if (!book || book.available < 1) {
+      return res.status(400).json({ message: 'Book not available for request' });
+    }
+
+    const existingReq = await db.collection('requests').findOne({
+      user: new ObjectId(userId),
+      book: new ObjectId(bookId),
+      status: 'Pending'
+    });
+    
+    if (existingReq) {
+      return res.status(400).json({ message: 'You have already requested this book' });
+    }
+
+    const result = await db.collection('requests').insertOne({
+      user: new ObjectId(userId),
+      book: new ObjectId(bookId),
+      status: 'Pending',
+      createdAt: new Date(),
+    });
+
+    res.status(201).json({ _id: result.insertedId, message: 'Book requested successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

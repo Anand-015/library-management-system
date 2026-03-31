@@ -19,6 +19,7 @@ export default function Navbar() {
           <Link style={styles.link} to="/borrows">Borrows</Link>
         </>}
         <Link style={styles.link} to="/fines">Fines</Link>
+        <Link style={styles.link} to="/inbox">Inbox</Link>
         <Link style={styles.link} to="/profile">Profile</Link>
         <button style={styles.logout} onClick={handleLogout}>Logout</button>
       </div>

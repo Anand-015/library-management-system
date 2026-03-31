@@ -14,7 +14,7 @@ export default function AdminDashboard() {
         api.get('/books'), api.get('/members'),
         api.get('/borrows/all'), api.get('/fines')
       ]);
-      setStats({ books: books.data.length, members: members.data.length, borrows: borrows.data.filter(b => b.status === 'borrowed').length, fines: fines.data.filter(f => f.status === 'pending').length });
+      setStats({ books: books.data.length, members: members.data.length, borrows: borrows.data.filter(b => b.status === 'borrowed').length, fines: fines.data.filter(f => f.status === 'pending' || f.status === 'accruing').length });
       const overdueRes = await api.get('/borrows/overdue');
       setOverdue(overdueRes.data);
       const genreCount = {};
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
     <div style={styles.container}>
       <h2 style={styles.title}>Admin Dashboard</h2>
       <div style={styles.statsGrid}>
-        {[['📚 Total Books', stats.books], ['👥 Members', stats.members], ['📖 Borrows', stats.borrows], ['💰 Pending Fines', stats.fines]].map(([label, val]) => (
+        {[['📚 Total Books', stats.books], ['👥 Members', stats.members], ['📖 Borrows', stats.borrows], ['💰 Unpaid Fines', stats.fines]].map(([label, val]) => (
           <div key={label} style={styles.statCard}><h3>{val}</h3><p>{label}</p></div>
         ))}
       </div>
