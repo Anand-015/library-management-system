@@ -10,8 +10,10 @@ export default function Profile() {
 
   useEffect(() => {
     setForm({ name: user?.name || '', phone: user?.phone || '', address: user?.address || '' });
-    api.get('/borrows/my').then(res => setBorrows(res.data));
-  }, []);
+    if (user?.role !== 'admin') {
+      api.get('/borrows/my').then(res => setBorrows(res.data)).catch(console.error);
+    }
+  }, [user]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -34,20 +36,24 @@ export default function Profile() {
         </form>
       </div>
 
-      <h3 style={{marginBottom:12, marginTop:24}}>My Borrowing History</h3>
-      <table style={styles.table}>
-        <thead><tr>{['Book','Issue Date','Due Date','Status'].map(h => <th key={h} style={styles.th}>{h}</th>)}</tr></thead>
-        <tbody>
-          {borrows.map(b => (
-            <tr key={b._id}>
-              <td style={styles.td}>{b.book?.title}</td>
-              <td style={styles.td}>{new Date(b.issueDate).toLocaleDateString()}</td>
-              <td style={styles.td}>{new Date(b.dueDate).toLocaleDateString()}</td>
-              <td style={styles.td}><span style={{color: b.status==='returned'?'green':'#1a73e8'}}>{b.status}</span></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {user?.role !== 'admin' && (
+        <>
+          <h3 style={{marginBottom:12, marginTop:24}}>My Borrowing History</h3>
+          <table style={styles.table}>
+            <thead><tr>{['Book','Issue Date','Due Date','Status'].map(h => <th key={h} style={styles.th}>{h}</th>)}</tr></thead>
+            <tbody>
+              {borrows.map(b => (
+                <tr key={b._id}>
+                  <td style={styles.td}>{b.book?.title}</td>
+                  <td style={styles.td}>{new Date(b.issueDate).toLocaleDateString()}</td>
+                  <td style={styles.td}>{new Date(b.dueDate).toLocaleDateString()}</td>
+                  <td style={styles.td}><span style={{color: b.status==='returned'?'green':'#1a73e8'}}>{b.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }
